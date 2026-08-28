@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="Blyfto V1 premium light prototype">
+<link rel="icon" href="assets/blyfto-logo.png">
+<link rel="manifest" href="manifest.json">
+<title>Blyfto</title>
+<style>
+:root{--gold:#c99a2e;--gold2:#e2b84d;--ink:#171717;--muted:#777;--line:#eadfca;--soft:#fffaf0}
+*{box-sizing:border-box}html,body{margin:0;background:#fff;color:var(--ink);font-family:Arial,sans-serif}
+.app{max-width:480px;min-height:100vh;margin:auto;background:#fff;position:relative;overflow:hidden}
+.screen{display:none;min-height:100vh}.screen.active{display:flex;flex-direction:column}
+.splash{align-items:center;justify-content:center;text-align:center;padding:30px}.logo{width:180px;height:180px;object-fit:contain}.brand{font-size:38px;font-weight:700;letter-spacing:4px;margin-top:18px}.tag{color:#777;margin-top:6px;font-size:14px}
+.loader{width:90px;height:3px;background:#eee;margin-top:30px;border-radius:9px}.loader span{display:block;width:40%;height:100%;background:var(--gold)}
+.top,.header{padding:22px;display:flex;justify-content:space-between;align-items:center}.wordmark{font-weight:700;letter-spacing:2px}.skip{border:0;background:none;color:#777;font-size:14px}
+.slide{padding:25px 28px;flex:1;display:flex;flex-direction:column;justify-content:center}.slideIcon,.icon{background:var(--soft);border:1px solid var(--line);color:#9b7017;display:grid;place-items:center}.slideIcon{width:82px;height:82px;border-radius:25px;font-size:30px;margin-bottom:25px}.slide h1{font-size:34px;line-height:1.1;margin:0 0 15px}.slide p{color:#666;font-size:17px;line-height:1.55}.dots{text-align:center;padding:15px}.dot{display:inline-block;width:7px;height:7px;background:#ddd;border-radius:50%;margin:4px}.dot.on{width:23px;background:var(--gold);border-radius:8px}
+.btn{border:0;border-radius:15px;padding:16px 20px;font-size:16px;font-weight:700;cursor:pointer}.primary{background:var(--gold2);color:#171717}.secondary{background:#fff;border:1px solid var(--line)}.actions{display:grid;gap:12px;margin-top:25px}
+.auth{padding:25px}.auth h1{font-size:34px;margin:25px 0 8px}.sub{color:#777;line-height:1.5}.field{margin-top:17px}.field label{font-size:13px;font-weight:700;display:block;margin-bottom:7px}.field input{width:100%;padding:15px;border:1px solid #ddd;border-radius:13px;font-size:16px}
+.content{padding:0 18px 105px}.greeting{margin:15px 2px}.greeting small{color:#888}.greeting h1{font-size:29px;margin:5px 0}.avatar{width:42px;height:42px;border-radius:50%;background:var(--soft);border:1px solid var(--line);display:grid;place-items:center;color:#9b7017;font-weight:700}
+.trust{border:1px solid var(--line);border-radius:22px;padding:18px;background:#fffaf0;display:flex;gap:15px;align-items:center}.trustRing{width:62px;height:62px;border-radius:50%;border:5px solid var(--gold2);display:grid;place-items:center;font-weight:700;flex:none}.trust span{display:block;color:#777;font-size:13px;line-height:1.4;margin-top:3px}
+.sectionTitle{display:flex;justify-content:space-between;align-items:center;margin:25px 2px 12px}.sectionTitle h2{font-size:18px;margin:0}.sectionTitle span{font-size:12px;color:#9b7017}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.card{border:1px solid var(--line);border-radius:20px;padding:17px;min-height:125px}.icon{width:45px;height:45px;border-radius:14px;font-size:20px;margin-bottom:15px}.card b{font-size:16px}.card p{font-size:12px;color:#888;margin:4px 0}
+.moreList{display:grid;gap:10px}.moreItem{display:flex;align-items:center;gap:14px;padding:14px;border:1px solid var(--line);border-radius:17px}.moreItem .icon{margin:0}.moreItem small{display:block;color:#888;margin-top:3px}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(480px,100%);height:78px;background:#fff;border-top:1px solid #eee;display:grid;grid-template-columns:repeat(5,1fr);z-index:10}.nav button{border:0;background:none;color:#777;font-size:11px}.nav button.active{color:#9b7017}.nav i{display:block;font-style:normal;font-size:22px;margin-bottom:4px}.nav .fab{width:54px;height:54px;margin:auto;border-radius:50%;background:var(--gold2);color:#171717;font-size:21px}
+.toast{position:fixed;bottom:95px;left:50%;transform:translateX(-50%);background:#171717;color:#fff;padding:11px 16px;border-radius:12px;font-size:13px;display:none;z-index:20}
+</style>
+</head>
+<body><div class="app">
+
+<section id="splash" class="screen active splash">
+<img class="logo" src="assets/blyfto-logo.png" alt="Blyfto logo"><div class="brand">BLYFTO</div>
+<div class="tag">One Identity. Infinite Possibilities.</div><div class="loader"><span></span></div>
+</section>
+
+<section id="intro" class="screen">
+<div class="top"><div class="wordmark">BLYFTO</div><button class="skip" onclick="show('auth')">Skip</button></div>
+<div class="slide" id="slide"></div><div class="dots" id="dots"></div>
+</section>
+
+<section id="auth" class="screen auth">
+<button class="skip" onclick="show('intro')">Back</button><h1>Welcome to Blyfto.</h1>
+<p class="sub">Create your account first. Verification comes after your account is created.</p>
+<div class="field"><label>Full name</label><input id="name" placeholder="Your name"></div>
+<div class="field"><label>Phone number</label><input id="phone" type="tel" placeholder="+234"></div>
+<div class="field"><label>Email address</label><input id="email" type="email" placeholder="you@example.com"></div>
+<div class="actions"><button class="btn primary" onclick="createAccount()">Create account</button><button class="btn secondary" onclick="signIn()">Sign in</button></div>
+</section>
+
+<section id="dashboard" class="screen">
+<header class="header"><div><div class="wordmark">BLYFTO</div><small style="color:#888">Trusted Digital Identity</small></div><div class="avatar">B</div></header>
+<main class="content"><div class="greeting"><small>Good to see you</small><h1 id="hello">Welcome.</h1></div>
+<div class="trust"><div class="trustRing">0%</div><div><b>Verify your account</b><span>Verify your identity to choose your @username and unlock more services.</span></div></div>
+<div class="sectionTitle"><h2>Quick actions</h2><span>V1</span></div>
+<div class="grid">
+<div class="card" onclick="toast('Call demo')"><div class="icon">☎</div><b>Call</b><p>Audio and video</p></div>
+<div class="card" onclick="toast('Chat demo')"><div class="icon">◌</div><b>Chat</b><p>Messages and groups</p></div>
+<div class="card" onclick="toast('Business demo')"><div class="icon">▦</div><b>Business</b><p>Find and connect</p></div>
+<div class="card" onclick="show('more')"><div class="icon">•••</div><b>More</b><p>More products</p></div>
+</div>
+<div class="sectionTitle"><h2>Blyfto essentials</h2></div>
+<div class="moreList"><div class="moreItem"><div class="icon">✓</div><div><b>Complete your profile</b><small>Build your trusted identity</small></div></div>
+<div class="moreItem"><div class="icon">ID</div><div><b>Verify your account</b><small>Choose your unique @username</small></div></div></div>
+</main>
+</section>
+
+<section id="more" class="screen">
+<header class="header"><div><div class="wordmark">MORE</div><small style="color:#888">Everything else in Blyfto</small></div><button class="skip" onclick="show('dashboard')">Close</button></header>
+<main class="content"><div class="sectionTitle"><h2>Your products</h2></div><div class="moreList">
+<div class="moreItem"><div class="icon">◎</div><div><b>Community</b><small>Join and create communities</small></div></div>
+<div class="moreItem"><div class="icon">⌂</div><div><b>Family Hub</b><small>Family safety and trusted contacts</small></div></div>
+<div class="moreItem"><div class="icon">₦</div><div><b>Wallet</b><small>Payments and money tools</small></div></div>
+<div class="moreItem"><div class="icon">▤</div><div><b>Education</b><small>Classes, groups and assignments</small></div></div>
+<div class="moreItem"><div class="icon">▣</div><div><b>Documents</b><small>Manage important documents</small></div></div>
+</div></main>
+</section>
+<div id="toast" class="toast"></div>
+</div>
+<script>
+const slides=[
+["ID","Your trusted identity","Create one trusted Blyfto identity and use it across the services that matter to you."],
+["☎","Call people your way","Connect with people using their Blyfto identity, with calling designed around trust and safety."],
+["◌","Chat and connect","Message people, create groups and keep conversations simple and useful."],
+["▦","Discover businesses","Find businesses, explore services and connect with trusted businesses through Blyfto."],
+["✦","One place for more","Community, Family Hub, Wallet, Education and more can live inside one trusted experience."]
+];
+let slide=0;
+function render(){let s=slides[slide];document.getElementById('slide').innerHTML='<div class="slideIcon">'+s[0]+'</div><h1>'+s[1]+'</h1><p>'+s[2]+'</p><button class="btn primary" onclick="next()">'+(slide===4?'Continue':'Next')+'</button>';document.getElementById('dots').innerHTML=slides.map((_,i)=>'<span class="dot '+(i===slide?'on':'')+'"></span>').join('')}
+function next(){if(slide<4){slide++;render()}else show('auth')}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');scrollTo(0,0)}
+function createAccount(){let n=document.getElementById('name').value.trim();if(!n){toast('Please enter your name');return}localStorage.blyftoName=n;document.getElementById('hello').textContent='Welcome, '+n.split(' ')[0]+'.';show('dashboard')}
+function signIn(){let n=localStorage.blyftoName||'Blyfto user';document.getElementById('hello').textContent='Welcome, '+n.split(' ')[0]+'.';show('dashboard')}
+function toast(t){let e=document.getElementById('toast');e.textContent=t;e.style.display='block';clearTimeout(window.x);window.x=setTimeout(()=>e.style.display='none',1800)}
+const nav='<nav class="nav"><button class="active" onclick="show(\'dashboard\')"><i>⌂</i>Home</button><button onclick="toast(\'Call\')"><i>☎</i>Call</button><button class="fab" onclick="toast(\'Ask Blyfto\')">✦</button><button onclick="toast(\'Chat\')"><i>◌</i>Chat</button><button onclick="show(\'more\')"><i>•••</i>More</button></nav>';
+document.getElementById('dashboard').insertAdjacentHTML('beforeend',nav);document.getElementById('more').insertAdjacentHTML('beforeend',nav);
+setTimeout(()=>{show('intro');render()},1100);
+</script></body></html>
