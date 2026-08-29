@@ -7,7 +7,7 @@
   "theme_color": "#ffffff",
   "icons": [
     {
-      "src": "assets/blyfto-logo.png",
+      "src": "blyfto-logo.png",
       "sizes": "any",
       "type": "image/png"
     }
